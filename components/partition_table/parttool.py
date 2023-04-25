@@ -18,8 +18,6 @@ import gen_esp32part as gen
 
 __version__ = '2.0'
 
-COMPONENTS_PATH = os.path.expandvars(os.path.join('$IDF_PATH', 'components'))
-ESPTOOL_PY = os.path.join(COMPONENTS_PATH, 'esptool_py', 'esptool', 'esptool.py')
 
 PARTITION_TABLE_OFFSET = 0x8000
 
@@ -112,7 +110,9 @@ class ParttoolTarget():
     # otherwise set `out` to file descriptor
     # beware that the method does not close the file descriptor
     def _call_esptool(self, args, out=None):
-        esptool_args = [sys.executable, ESPTOOL_PY] + self.esptool_args
+        # esptool_args = [sys.executable, ESPTOOL_PY] + self.esptool_args
+        # PLACE esptool BINARY IN SAME FOLDER AS parttool BINARY
+        esptool_args = ["./esptool"] + self.esptool_args
 
         if self.port:
             esptool_args += ['--port', self.port]
