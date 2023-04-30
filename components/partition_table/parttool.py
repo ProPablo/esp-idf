@@ -18,8 +18,10 @@ import gen_esp32part as gen
 
 __version__ = '2.0'
 
-# PLACE esptool BINARY IN SAME FOLDER AS parttool BINARY
-ESPTOOL=os.path.join( os.path.dirname(__file__), "esptool")
+
+COMPONENTS_PATH = os.path.expandvars(os.path.join('$IDF_PATH', 'components'))
+# ESPTOOL=os.path.join( os.path.dirname(__file__), "esptool")
+ESPTOOL = [sys.executable, os.path.join(COMPONENTS_PATH, 'esptool_py', 'esptool', 'esptool.py')]
 
 PARTITION_TABLE_OFFSET = 0x8000
 
@@ -112,8 +114,9 @@ class ParttoolTarget():
     # otherwise set `out` to file descriptor
     # beware that the method does not close the file descriptor
     def _call_esptool(self, args, out=None):
+        esptool_args = [*ESPTOOL] + self.esptool_args
+        # esptool_args = [sys.executable, ESPTOOL] + self.esptool_args
         # esptool_args = [sys.executable, ESPTOOL_PY] + self.esptool_args
-        esptool_args = [ESPTOOL] + self.esptool_args
 
         if self.port:
             esptool_args += ['--port', self.port]
@@ -222,6 +225,7 @@ def _get_partition_info(target, partition_id, info):
 
 def main():
     global quiet
+    global ESPTOOL
 
     parser = argparse.ArgumentParser('ESP-IDF Partitions Tool')
 
@@ -240,6 +244,11 @@ def main():
     parser.add_argument('--partition-table-offset', '-o', help='offset to read the partition table from', type=str)
     parser.add_argument('--partition-table-file', '-f', help='file (CSV/binary) to read the partition table from; \
                                                             overrides device attached to specified port as the partition table source when defined')
+
+
+    parser.add_argument('--esptool-loc', '-e', help='Location to the esptoolbinary relative to self;\
+                        Not providing this uses the environment variable ', nargs="?", type=str, default=None, const="esptool")
+    
 
     partition_selection_parser = argparse.ArgumentParser(add_help=False)
 
@@ -281,6 +290,11 @@ def main():
         if not quiet:
             parser.print_help()
         sys.exit(1)
+
+    if args.esptool_loc is not None:
+        # Path is going to be splat later in _call_esptool
+        ESPTOOL=[os.path.join( os.path.dirname(__file__), args.esptool_loc)]
+
 
     # Prepare the partition to perform operation on
     if args.partition_name:
