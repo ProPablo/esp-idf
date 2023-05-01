@@ -246,8 +246,9 @@ def main():
                                                             overrides device attached to specified port as the partition table source when defined')
 
 
-    parser.add_argument('--esptool-loc', '-e', help='Location to the esptoolbinary relative to self;\
-                        Not providing this uses the environment variable ', nargs="?", type=str, default=None, const="esptool")
+    parser.add_argument('--esptool-loc', '-e', help='Absolute path to the esptoolbinary;\
+                        Otherwise finds esptool relative to self;\
+                        Not providing this uses the environment variable $IDF_PATH', nargs="?", type=str, default=None, const= os.path.join( os.path.dirname(__file__), "esptool"))
     
 
     partition_selection_parser = argparse.ArgumentParser(add_help=False)
@@ -293,7 +294,8 @@ def main():
 
     if args.esptool_loc is not None:
         # Path is going to be splat later in _call_esptool
-        ESPTOOL=[os.path.join( os.path.dirname(__file__), args.esptool_loc)]
+        # ESPTOOL=[os.path.join( os.path.dirname(__file__), args.esptool_loc)] # Doesnt work in --oneFile exes since they get unzipped in tempFolder
+        ESPTOOL=[args.esptool_loc]
 
 
     # Prepare the partition to perform operation on
