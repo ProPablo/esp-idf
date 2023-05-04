@@ -354,8 +354,8 @@ def dump_nvs_data_json():
             ns_dict[entry_key] = {"type": type_str, "value": data_str}
 
     print(json.dumps(nvs_table))
-    with open(out_json, 'w') as f:            
-        json.dump(nvs_table, f)
+    # with open(out_json, 'w') as f:            
+    #     json.dump(nvs_table, f)
 
 
 
@@ -371,6 +371,7 @@ def main():
     # parser.add_argument('--json', '-j', help="Print out the table in json format", action='store_true')
     # parser.add_argument('--json-file', '-jf', help="Store out the table in json format, use `-j` in front", nargs="?", type=argparse.FileType('w'), default=None, const="data.json")
     parser.add_argument('--json', '-j', help="Print out the table in json format", nargs="?", type=str, default=None, const="data.json")
+    # TODO: actually use the file, have a seperate flag for the output file vs print to stdout
 
     args = parser.parse_args()
 
