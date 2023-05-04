@@ -339,7 +339,7 @@ out_json = "data.json"
 def dump_nvs_data_json():
     for ns_name in nvs_table:
         ns_dict = nvs_table[ns_name]
-        print("Namespace %s" % (ns_name))
+        # print("Namespace %s" % (ns_name))
         for entry_key in ns_dict:
             entry_info = ns_dict[entry_key]
             
@@ -370,7 +370,7 @@ def main():
     parser.add_argument('--special_handling', '-s', help='Display SSID and password BLOBs as strings', action='store_true')
     # parser.add_argument('--json', '-j', help="Print out the table in json format", action='store_true')
     # parser.add_argument('--json-file', '-jf', help="Store out the table in json format, use `-j` in front", nargs="?", type=argparse.FileType('w'), default=None, const="data.json")
-    parser.add_argument('--json', '-j', help="Print out the table in json format", nargs="?", type=argparse.FileType('w'), default=None, const="data.json")
+    parser.add_argument('--json', '-j', help="Print out the table in json format", nargs="?", type=str, default=None, const="data.json")
 
     args = parser.parse_args()
 
